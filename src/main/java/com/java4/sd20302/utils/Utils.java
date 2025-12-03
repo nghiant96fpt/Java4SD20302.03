@@ -1,0 +1,85 @@
+package com.java4.sd20302.utils;
+
+import java.util.Date;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+public class Utils {
+//	2  hằng số giữ giá trị key của cookie 
+
+	public static final String COOKIE_KEY_USER_ID = "user_id";
+	public static final String COOKIE_KEY_ROLE = "role";
+
+	public static String getCookieValue(String key, HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies == null) {
+			return null;
+		}
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(key)) {
+				return cookie.getValue();
+			}
+		}
+		return null;
+	}
+
+	public static void clearCookie(HttpServletRequest request, HttpServletResponse response) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies == null) {
+			return;
+		}
+
+		for (Cookie cookie : cookies) {
+			cookie.setMaxAge(-1);
+			response.addCookie(cookie);
+		}
+	}
+
+	public static void setCookie(String key, String value, HttpServletResponse response) {
+		int day = 60 * 60 * 24 * 7;
+
+		Cookie cookie = new Cookie(key, value);
+		cookie.setMaxAge(day);
+		cookie.setPath("/");
+		response.addCookie(cookie);
+	}
+
+//	Phương thức INPUT: String => OUTPUT:String 
+
+	public static String capitalizeString(String str) {
+		String temp = str.trim();
+
+//		name = "[tHế, giới, ĐỘNg, VậT]"
+
+		String words[] = str.trim().split("\\s+");
+		for (int i = 0; i < words.length; i++) {
+			words[i] = words[i].toLowerCase();
+			String firstChar = words[i].substring(0, 1);
+			firstChar = firstChar.toUpperCase();
+			words[i] = firstChar + words[i].substring(1);
+		}
+
+		return String.join(" ", words);
+	}
+
+	public static String uploadImage(HttpServletRequest req, Part part) {
+		try {
+			String type = part.getContentType().split("/")[1];
+			String name = String.valueOf(new Date().getTime()) + "." + type;
+			String path = "/assets/images/" + name;
+
+			String tomcatPath = req.getServletContext().getRealPath(path);
+
+			part.write(tomcatPath);
+
+			return name;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+}
