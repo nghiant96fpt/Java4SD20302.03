@@ -106,22 +106,6 @@
 			axios.get(bodyTable.getAttribute("data-context-path") + "/api/videos")
 			.then((res)=>{
 				console.log(res);
-			})
-			.catch((error)=>{
-				console.log(error);
-			})
-			
-			axios.get(bodyTable.getAttribute("data-context-path") + "/api/videos")
-			.then((res)=>{
-				console.log(res);
-			})
-			.catch((error)=>{
-				console.log(error);
-			})
-			
-			axios.get(bodyTable.getAttribute("data-context-path") + "/api/videos")
-			.then((res)=>{
-				console.log(res);
 				const arrayHtml = res.data.map((element) => {
 					return "<tr>" +
 				      "<th scope='col'>" + element.id + "</th>" +
@@ -131,7 +115,9 @@
 				      "<td>" + element.authName + "</td>" +
 				      "<td>" + element.catName + "</td>" +
 				      "<td>" + element.status + "</td>" +
-				      "<td>Hành động</td>" +
+				      "<td>" +
+				      	"<button class='btn btn-danger' onclick='deleteVideo(" + element.id + ")'>Xoá video</button>" +
+				      "</td>" +
 		    		"</tr>";
 				});
 				bodyTable.innerHTML = arrayHtml.join("");
@@ -140,6 +126,34 @@
 				console.log(error);
 			})
 			console.log("end call api");
+		}
+		
+		async function deleteVideo(id){
+			if(confirm("Bạn có đồng ý xoá video?")){
+				console.log(id);	
+				
+				try{
+					const bodyTable = document.getElementById("bodyTableVideo");
+					const data = await axios.post(
+							bodyTable.getAttribute("data-context-path") + "/api/video-delete",
+							{
+								"videoId": id
+							},
+							{
+								"headers": {
+									"Content-Type": "application/x-www-form-urlencoded"
+								}
+							}
+						);
+				}catch(e){
+					console.log(e);
+					alert(e.message);
+				}
+				
+				/* Gọi api xoá video */
+				/* Nếu có lỗi hiển thị thông báo */
+				/* Nếu thành công hiển thị thông báo và reload lại danh sách video */
+			}
 		}
 		
 		getData();

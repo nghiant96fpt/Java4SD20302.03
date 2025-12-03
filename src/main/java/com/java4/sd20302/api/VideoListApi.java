@@ -20,6 +20,35 @@ import com.java4.sd20302.utils.Utils;
 @WebServlet("/api/videos")
 public class VideoListApi extends HttpServlet {
 
+// Ma trận phân quyền 
+// User || Admin || Staff
+
+//	User A => CUD Video => Không xem được 
+//	User B => Xem và sửa video
+//	....
+
+//	Sửa
+//	PUT || PATCH
+//	@Override
+//	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//		// TODO Auto-generated method stub
+//		super.doPut(req, resp);
+//	}
+//
+////	Xoá
+//	@Override
+//	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//		// TODO Auto-generated method stub
+//		super.doDelete(req, resp);
+//	}
+//
+//	// Thêm
+//	@Override
+//	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//		// TODO Auto-generated method stub
+//		super.doPost(req, resp);
+//	}
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setCharacterEncoding("utf-8");
@@ -52,12 +81,12 @@ public class VideoListApi extends HttpServlet {
 
 		Gson gson = new GsonBuilder().serializeNulls().create();
 
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(10000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 		resp.getWriter().print(gson.toJson(videoResponseList));
 	}
