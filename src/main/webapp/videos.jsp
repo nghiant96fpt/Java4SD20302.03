@@ -125,16 +125,14 @@
 			.catch((error)=>{
 				console.log(error);
 			})
-			console.log("end call api");
 		}
 		
 		async function deleteVideo(id){
 			if(confirm("Bạn có đồng ý xoá video?")){
-				console.log(id);	
 				
 				try{
 					const bodyTable = document.getElementById("bodyTableVideo");
-					const data = await axios.post(
+					/* const data = await axios.post(
 							bodyTable.getAttribute("data-context-path") + "/api/video-delete",
 							{
 								"videoId": id
@@ -144,17 +142,65 @@
 									"Content-Type": "application/x-www-form-urlencoded"
 								}
 							}
+						); */
+						
+					const myHeaders = new Headers();
+					myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+					const urlencoded = new URLSearchParams();
+					urlencoded.append("videoId", id);
+					const requestOptions = {
+					  method: "POST",
+					  headers: myHeaders,
+					  body: urlencoded,
+					  redirect: "follow"
+					};
+					const data = await postData(
+							bodyTable.getAttribute("data-context-path") + "/api/video-delete",
+							requestOptions
 						);
+					console.log("delete video: ");
+					console.log(data);
+					
+					alert(data.data.message);
+					
+					getData();
 				}catch(e){
 					console.log(e);
 					alert(e.message);
 				}
-				
-				/* Gọi api xoá video */
-				/* Nếu có lỗi hiển thị thông báo */
-				/* Nếu thành công hiển thị thông báo và reload lại danh sách video */
 			}
 		}
+		
+		async function postData(url, requestOptions){
+			return await new Promise((resovel, reject)=>{
+				fetch(url, requestOptions)
+				  .then((response) => response.json())
+				  .then((result) => {
+					  console.log(result);
+					  if(result.status >= 200 && result.status <= 299){
+						  resovel(result);
+					  }else{
+						  reject(result);
+					  }
+				  })
+				  .catch((error) => reject(error));
+			});
+		}
+		
+		/* async function getData(url){
+			return await new Promise((resovel, reject)=>{
+				fetch(url)
+				  .then((response) => response.json())
+				  .then((result) => {
+					  if(result.status >= 200 && result.status <= 299){
+						  resovel(result);
+					  }else{
+						  reject(result);
+					  }
+				  })
+				  .catch((error) => reject(error));
+			});
+		} */
 		
 		getData();
 		

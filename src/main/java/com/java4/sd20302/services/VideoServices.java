@@ -119,6 +119,7 @@ public class VideoServices {
 		try {
 
 			if (!manager.getTransaction().isActive()) {
+				System.out.println("Transaction start");
 				manager.getTransaction().begin();
 			}
 
@@ -132,8 +133,10 @@ public class VideoServices {
 //				}
 //				manager.remove(comment);
 //			}
+
 			deleteComment(videoCheck.getComments(), manager);
-			manager.remove(videoCheck);
+			Video managedVideo = manager.merge(videoCheck);
+			manager.remove(managedVideo);
 
 //			Xoá yêu thích
 //			Xoá comment 

@@ -19,6 +19,9 @@ public class DeleteVideoApi extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //		Lấy video id từ client 
+		resp.setCharacterEncoding("utf-8");
+		resp.setContentType("application/json");
+		resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		VideoDeleteResponse response = new VideoDeleteResponse();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 
@@ -26,6 +29,8 @@ public class DeleteVideoApi extends HttpServlet {
 //		TH 1: không có id => lỗi
 //		TH 2: có id nhưng không phải số => lỗi
 //		TH 3: số <= 0 => lỗi
+
+//		Nếu lỗi thì http status lúc nào cũng trả về 200
 
 		if (videoId == null) {
 			response.setMessage("Video ID bắt buộc phải có");
@@ -88,6 +93,7 @@ public class DeleteVideoApi extends HttpServlet {
 
 		response.setMessage("Xoá video thành công");
 		response.setStatus(true);
+		resp.setStatus(HttpServletResponse.SC_OK);
 		resp.getWriter().print(gson.toJson(response));
 	}
 }
